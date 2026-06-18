@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>SaaS Platform — JNN Group · Mariana Rondino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --neon: #B8FF57; --bg: #0A0A0A; --surface: #111111;
+  --border: #1E1E1E; --border2: #2A2A2A; --text: #EEEDE8;
+  --muted: #444; --muted2: #888;
+  --page-pad: clamp(1.5rem, 6vw, 5rem); --content-max: 740px;
+}
+html { scroll-behavior: smooth; color-scheme: dark; }
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; font-weight:300; cursor:none; overflow-x:hidden; -webkit-font-smoothing:antialiased; forced-color-adjust:none; }
+#cur { position:fixed; width:9px; height:9px; background:var(--neon); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .12s ease; }
+#cur-ring { position:fixed; width:32px; height:32px; border:1px solid rgba(184,255,87,0.4); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .2s,height .2s,opacity .2s; opacity:.45; }
+.cursor-grow #cur { transform:translate(-50%,-50%) scale(2); }
+.cursor-grow #cur-ring { width:48px; height:48px; opacity:.7; }
+nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:1.25rem var(--page-pad); border-bottom:1px solid var(--border); background:rgba(10,10,10,0.92); backdrop-filter:blur(16px); }
+.nav-logo { font-family:'DM Mono',monospace; font-size:12px; color:var(--muted2); letter-spacing:0.08em; text-decoration:none; transition:color .2s; }
+.nav-logo span { color:var(--neon); }
+.nav-logo:hover { color:var(--text); }
+.nav-back { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted2); text-decoration:none; letter-spacing:0.06em; transition:color .2s; }
+.nav-back:hover { color:var(--neon); }
+.proj-hero { padding:8rem var(--page-pad) 5rem; border-bottom:1px solid var(--border); }
+.proj-eyebrow { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted2); letter-spacing:0.16em; text-transform:uppercase; margin-bottom:1.5rem; }
+.proj-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,8vw,8rem); line-height:0.88; letter-spacing:-0.01em; color:var(--text); margin-bottom:3rem; }
+.proj-title span { color:var(--neon); }
+.proj-meta { display:flex; gap:0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.proj-meta-item { display:flex; flex-direction:column; gap:.4rem; padding:1.25rem 2rem 1.25rem 0; margin-right:2rem; border-right:1px solid var(--border); padding-right:2rem; }
+.proj-meta-item:last-child { border-right:none; }
+.proj-meta-key { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.16em; text-transform:uppercase; }
+.proj-meta-val { font-size:13px; color:var(--muted2); }
+.proj-content-wide { padding:0 var(--page-pad) 5rem; border-bottom:1px solid var(--border); }
+.proj-intro { font-size:clamp(16px,2vw,19px); color:var(--muted2); line-height:1.8; margin-bottom:4rem; max-width:var(--content-max); margin-left:auto; margin-right:auto; }
+.proj-intro strong { color:var(--text); font-weight:400; }
+.proj-row { display:grid; grid-template-columns:160px 1fr; gap:0; margin-bottom:3rem; padding-bottom:3rem; border-bottom:1px solid var(--border); max-width:var(--content-max); margin-left:auto; margin-right:auto; }
+.proj-row:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.proj-row-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--neon); letter-spacing:0.16em; text-transform:uppercase; padding-top:3px; }
+.proj-row-body { display:flex; flex-direction:column; gap:1.25rem; }
+.proj-row-body p { font-size:15px; color:var(--muted2); line-height:1.85; }
+.proj-row-body p strong { color:var(--text); font-weight:400; }
+.proj-row-body h3 { font-size:15px; font-weight:500; color:var(--text); margin-top:.5rem; }
+.proj-img { width:100%; background:var(--surface); border:1px solid var(--border); min-height:220px; overflow:hidden; margin:1.5rem 0; }
+.proj-img img { width:100%; height:100%; object-fit:cover; display:block; }
+.proj-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin:1.5rem 0; }
+.proj-metric { background:var(--bg); padding:1.75rem 1.5rem; }
+.proj-metric-num { font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:var(--neon); line-height:1; margin-bottom:.3rem; }
+.proj-metric-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; }
+.proj-outcomes { list-style:none; display:flex; flex-direction:column; gap:.75rem; }
+.proj-outcomes li { font-size:15px; color:var(--muted2); line-height:1.7; padding-left:1.25rem; position:relative; }
+.proj-outcomes li::before { content:'—'; position:absolute; left:0; color:var(--neon); font-size:11px; top:2px; }
+.proj-nav-bottom { display:flex; justify-content:space-between; align-items:center; padding:2.5rem var(--page-pad); }
+.proj-nav-link { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted2); text-decoration:none; letter-spacing:0.06em; transition:color .2s; }
+.proj-nav-link:hover { color:var(--neon); }
+footer { padding:1.75rem var(--page-pad); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-top:1px solid var(--border); }
+.footer-copy { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.06em; }
+.footer-back { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted2); text-decoration:none; letter-spacing:0.06em; border-bottom:1px solid var(--border2); padding-bottom:1px; transition:color .2s,border-color .2s; }
+.footer-back:hover { color:var(--neon); border-color:var(--neon); }
+.reveal { opacity:0; transform:translateY(20px); transition:opacity .65s ease,transform .65s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+@media (max-width:768px) { .proj-row { grid-template-columns:1fr; gap:1rem; } .proj-meta-item { border-right:none; } .proj-metrics { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<nav>
+  <a href="portfolio-mariana-v2.html" class="nav-logo"><span>MR</span> · Mariana Rondino</a>
+  <a href="portfolio-mariana-v2.html#projects" class="nav-back">← Work</a>
+</nav>
+
+<div class="proj-hero">
+  <div class="proj-eyebrow">JNN Group · SaaS · Feb 2023 — Oct 2023</div>
+  <h1 class="proj-title">SaaS<br><span>Platform</span></h1>
+  <div class="proj-meta">
+    <div class="proj-meta-item"><span class="proj-meta-key">Role</span><span class="proj-meta-val">Product Manager & Product Designer</span></div>
+    <div class="proj-meta-item"><span class="proj-meta-key">Area</span><span class="proj-meta-val">Cybersecurity · Talent Acquisition</span></div>
+    <div class="proj-meta-item"><span class="proj-meta-key">Deliverables</span><span class="proj-meta-val">Strategy, UX Flows, Prototypes, Backlog</span></div>
+    <div class="proj-meta-item"><span class="proj-meta-key">Context</span><span class="proj-meta-val">0 → 1 · Hybrid PM + Design</span></div>
+  </div>
+</div>
+
+<div class="proj-content-wide">
+  <div style="max-width:var(--content-max); margin:0 auto; padding-top:4rem;">
+
+    <p class="proj-intro reveal">
+      JNN Group needed to build a SaaS platform — "Quantome" — to streamline cybersecurity talent acquisition using AI. I joined in a <strong>hybrid role as both Product Manager and Product Designer</strong>, owning the product end-to-end from strategy and discovery through design and delivery.
+    </p>
+
+    <div class="proj-row reveal">
+      <span class="proj-row-label">The Problem</span>
+      <div class="proj-row-body">
+        <h3>Talent Scarcity in Cybersecurity</h3>
+        <p>Demand for qualified cybersecurity professionals far exceeded supply. Companies were spending months on hiring processes with no guarantee of quality at the end.</p>
+        <h3>Slow, Manual Screening</h3>
+        <p>Existing hiring flows relied on manual resume reviews and unstructured interviews — time-consuming, inconsistent, and expensive at scale.</p>
+        <h3>No Trust or Verification Layer</h3>
+        <p>Companies had no reliable way to verify that candidates were who they claimed to be. This created risk and eroded confidence in the hiring process.</p>
+        <h3>High Cost Per Hire</h3>
+        <p>Prolonged processes drained budgets that companies needed to invest in actual security infrastructure.</p>
+      </div>
+    </div>
+
+    <div class="proj-row reveal">
+      <span class="proj-row-label">Process</span>
+      <div class="proj-row-body">
+        <h3>As Product Manager</h3>
+        <p>Defined and prioritized the product backlog based on business goals and user research. Tracked risks and dependencies across the full delivery cycle. Planned and managed release milestones end-to-end. Facilitated a <strong>Design Sprint</strong> to align the team and validate the core product concept early.</p>
+        <h3>As Product Designer</h3>
+        <p>Led user research to understand the cybersecurity hiring market and key pain points on both sides — companies and candidates. Designed end-to-end UX flows, wireframes, prototypes, and high-fidelity screens across all core features.</p>
+        <div class="proj-img">
+          <img src="images/jnn-platform.png" alt="Quantome platform — Figma screens" loading="lazy">
+        </div>
+        <h3>AI-Powered Screening</h3>
+        <p>Designed the UX for an AI layer that analyzed resumes and screening responses, surfacing only the most qualified candidates — dramatically reducing manual review time.</p>
+        <h3>ID Verification Flow</h3>
+        <p>Built a rigorous identity verification process into the candidate journey, giving companies confidence in who they were engaging with before investing in interviews.</p>
+        <div class="proj-img">
+          <img src="images/jnn-discovery.png" alt="B/P registration flow — Miro" loading="lazy">
+        </div>
+        <h3>Talent Profiles & Matching Interface</h3>
+        <p>Designed structured, scannable talent profiles optimized for security roles, and a matching interface allowing companies to filter by skill set, certifications, seniority, and availability.</p>
+        <div class="proj-img">
+          <img src="images/jnn-sitemap.png" alt="Buyers journey sitemap — Miro" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-row reveal">
+      <span class="proj-row-label">Key Insight</span>
+      <div class="proj-row-body">
+        <p>Holding both PM and Design roles revealed how much friction typically lives <strong>at the handoff between strategy and execution</strong>. Owning both eliminated that gap entirely — decisions were faster, priorities were clearer, and the team moved with significantly less ambiguity.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-bottom:3rem;">
+      <div class="proj-metrics">
+        <div class="proj-metric"><div class="proj-metric-num">↓</div><div class="proj-metric-label">Time-to-shortlist vs. manual</div></div>
+        <div class="proj-metric"><div class="proj-metric-num">↓</div><div class="proj-metric-label">Cost per hire</div></div>
+        <div class="proj-metric"><div class="proj-metric-num">↑</div><div class="proj-metric-label">Candidate trust & verification</div></div>
+      </div>
+    </div>
+
+    <div class="proj-row reveal">
+      <span class="proj-row-label">Outcome</span>
+      <div class="proj-row-body">
+        <ul class="proj-outcomes">
+          <li>AI screening reduced time-to-shortlist compared to manual processes</li>
+          <li>ID verification increased trust and reduced fraudulent candidate submissions</li>
+          <li>Cost-per-hire decreased significantly for companies using the platform</li>
+          <li>Delivered within scope and on schedule, with full stakeholder alignment</li>
+        </ul>
+        <div class="proj-img" style="margin-top:1rem;">
+          <img src="images/jnn-billing.png" alt="Billing process flow — Miro" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="proj-nav-bottom">
+  <a href="project-healthcare-saas.html" class="proj-nav-link">← Healthcare SaaS</a>
+  <a href="portfolio-mariana-v2.html#projects" class="proj-nav-link">All projects →</a>
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 Mariana Rondino · São Paulo, BR</span>
+  <a href="portfolio-mariana-v2.html" class="footer-back">← Back to portfolio</a>
+</footer>
+
+<script>
+if (window.matchMedia('(pointer: fine)').matches) {
+  const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function anim(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim);})();
+  document.querySelectorAll('a').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-grow'));el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-grow'));});
+}
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target);}});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

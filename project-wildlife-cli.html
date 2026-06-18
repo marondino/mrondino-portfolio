@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>CLI Interface — Wildlife Studios · Mariana Rondino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --neon: #B8FF57;
+  --bg: #0A0A0A;
+  --surface: #111111;
+  --border: #1E1E1E;
+  --border2: #2A2A2A;
+  --text: #EEEDE8;
+  --muted: #444;
+  --muted2: #888;
+  --page-pad: clamp(1.5rem, 6vw, 5rem);
+  --content-max: 740px;
+}
+html { scroll-behavior: smooth; color-scheme: dark; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; cursor: none; overflow-x: hidden; -webkit-font-smoothing: antialiased; forced-color-adjust: none; }
+
+#cur { position:fixed; width:9px; height:9px; background:var(--neon); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .12s ease; }
+#cur-ring { position:fixed; width:32px; height:32px; border:1px solid rgba(184,255,87,0.4); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .2s,height .2s,opacity .2s; opacity:.45; }
+.cursor-grow #cur { transform:translate(-50%,-50%) scale(2); }
+.cursor-grow #cur-ring { width:48px; height:48px; opacity:.7; }
+
+nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:1.25rem var(--page-pad); border-bottom:1px solid var(--border); background:rgba(10,10,10,0.92); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+.nav-logo { font-family:'DM Mono',monospace; font-size:12px; color:var(--muted2); letter-spacing:0.08em; text-decoration:none; transition:color .2s; }
+.nav-logo span { color:var(--neon); }
+.nav-logo:hover { color:var(--text); }
+.nav-back { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted2); text-decoration:none; letter-spacing:0.06em; display:flex; align-items:center; gap:.4rem; transition:color .2s; }
+.nav-back:hover { color:var(--neon); }
+
+/* HERO */
+.proj-hero { padding: 8rem var(--page-pad) 5rem; border-bottom: 1px solid var(--border); }
+.proj-eyebrow { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted2); letter-spacing:0.16em; text-transform:uppercase; margin-bottom:1.5rem; }
+.proj-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(3.5rem,9vw,9rem); line-height:0.88; letter-spacing:-0.01em; color:var(--text); margin-bottom:3rem; }
+.proj-title span { color:var(--neon); }
+
+.proj-meta { display:flex; gap:0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.proj-meta-item { display:flex; flex-direction:column; gap:.4rem; padding:1.25rem 2rem 1.25rem 0; margin-right:2rem; border-right:1px solid var(--border); padding-right:2rem; }
+.proj-meta-item:last-child { border-right:none; }
+.proj-meta-key { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.16em; text-transform:uppercase; }
+.proj-meta-val { font-size:13px; color:var(--muted2); }
+
+/* CONTENT */
+.proj-content { max-width:var(--content-max); margin:0 auto; padding:5rem var(--page-pad); }
+.proj-content-wide { padding:0 var(--page-pad) 5rem; border-bottom:1px solid var(--border); }
+
+.proj-intro { font-size:clamp(16px,2vw,19px); color:var(--muted2); line-height:1.8; margin-bottom:4rem; max-width:var(--content-max); margin-left:auto; margin-right:auto; }
+.proj-intro strong { color:var(--text); font-weight:400; }
+
+/* Section rows — label left, content right */
+.proj-row { display:grid; grid-template-columns:160px 1fr; gap:0; margin-bottom:3rem; padding-bottom:3rem; border-bottom:1px solid var(--border); }
+.proj-row:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.proj-row-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--neon); letter-spacing:0.16em; text-transform:uppercase; padding-top:3px; }
+.proj-row-body { display:flex; flex-direction:column; gap:1.25rem; }
+.proj-row-body p { font-size:15px; color:var(--muted2); line-height:1.85; }
+.proj-row-body p strong { color:var(--text); font-weight:400; }
+.proj-row-body h3 { font-size:15px; font-weight:500; color:var(--text); margin-top:.5rem; }
+
+/* Image placeholder */
+.proj-img { width:100%; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; min-height:240px; margin:1.5rem 0; }
+.proj-img img { width:100%; height:100%; object-fit:cover; display:block; }
+.proj-img-caption { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.08em; margin-top:.5rem; }
+
+/* Metrics */
+.proj-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin:1.5rem 0; }
+.proj-metric { background:var(--bg); padding:1.75rem 1.5rem; }
+.proj-metric-num { font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:var(--neon); line-height:1; margin-bottom:.3rem; }
+.proj-metric-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; }
+
+/* Outcome list */
+.proj-outcomes { list-style:none; display:flex; flex-direction:column; gap:.75rem; }
+.proj-outcomes li { font-size:15px; color:var(--muted2); line-height:1.7; padding-left:1.25rem; position:relative; }
+.proj-outcomes li::before { content:'—'; position:absolute; left:0; color:var(--neon); font-size:11px; top:2px; }
+
+/* Nav bottom */
+.proj-nav-bottom { display:flex; justify-content:space-between; align-items:center; padding:2.5rem var(--page-pad); border-top:1px solid var(--border); }
+.proj-nav-link { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted2); text-decoration:none; letter-spacing:0.06em; transition:color .2s; }
+.proj-nav-link:hover { color:var(--neon); }
+
+footer { padding:1.75rem var(--page-pad); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-top:1px solid var(--border); }
+.footer-copy { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.06em; }
+.footer-back { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted2); text-decoration:none; letter-spacing:0.06em; border-bottom:1px solid var(--border2); padding-bottom:1px; transition:color .2s,border-color .2s; }
+.footer-back:hover { color:var(--neon); border-color:var(--neon); }
+
+.reveal { opacity:0; transform:translateY(20px); transition:opacity .65s ease,transform .65s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+@media (max-width:768px) {
+  nav .nav-links { display:none; }
+  .proj-row { grid-template-columns:1fr; gap:1rem; }
+  .proj-meta { flex-wrap:wrap; }
+  .proj-meta-item { border-right:none; padding-right:0; margin-right:0; }
+  .proj-metrics { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<nav>
+  <a href="portfolio-mariana-v2.html" class="nav-logo"><span>MR</span> · Mariana Rondino</a>
+  <a href="portfolio-mariana-v2.html#projects" class="nav-back">← Work</a>
+</nav>
+
+<!-- HERO -->
+<div class="proj-hero">
+  <div class="proj-eyebrow">Wildlife Studios · Gaming · 2021 — 2022</div>
+  <h1 class="proj-title">CLI<br><span>Interface</span></h1>
+  <div class="proj-meta">
+    <div class="proj-meta-item">
+      <span class="proj-meta-key">Role</span>
+      <span class="proj-meta-val">Sr. Product Designer</span>
+    </div>
+    <div class="proj-meta-item">
+      <span class="proj-meta-key">Area</span>
+      <span class="proj-meta-val">Developer Tools · Mobile</span>
+    </div>
+    <div class="proj-meta-item">
+      <span class="proj-meta-key">Deliverables</span>
+      <span class="proj-meta-val">Research, Journey Map, CLI Design Doc</span>
+    </div>
+    <div class="proj-meta-item">
+      <span class="proj-meta-key">Context</span>
+      <span class="proj-meta-val">0 → 1 · Internal Hackathon</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="proj-content-wide">
+  <div style="max-width:var(--content-max); margin:0 auto; padding-top:4rem;">
+
+    <p class="proj-intro reveal">
+      Wildlife Studios needed a faster, more scalable way for game developers to create and configure games. Ahead of an internal Hackathon, stakeholders wanted a one-click solution — so I led research and design to <strong>map the game creation process end-to-end</strong> and deliver a usable CLI tool.
+    </p>
+
+    <!-- THE PROBLEM -->
+    <div class="proj-row reveal">
+      <span class="proj-row-label">The Problem</span>
+      <div class="proj-row-body">
+        <h3>Low Feature Awareness</h3>
+        <p>We identified 31 distinct game features available to developers — but most weren't aware they existed. The main challenge: closing that visibility gap at scale.</p>
+        <h3>Slow Setup & Cluster Management</h3>
+        <p>Creating and configuring games took too long. Monitoring cluster health and visualizing updates lacked proper tooling. Developers needed faster feedback loops and simpler workflows.</p>
+        <h3>Fragmented Documentation</h3>
+        <p>Each feature had a different owner, and documentation lived in silos. Accessing information required navigating multiple channels — creating friction and slowing teams down.</p>
+      </div>
+    </div>
+
+    <!-- PROCESS -->
+    <div class="proj-row reveal">
+      <span class="proj-row-label">Process</span>
+      <div class="proj-row-body">
+        <h3>Mapping the Developer Journey</h3>
+        <p>I ran workshops and research sessions to map the full game developer journey, identifying the most relevant features per game type and connecting patterns across all 31 services.</p>
+        <div class="proj-img">
+          <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&q=80" alt="Developer journey mapping" loading="lazy">
+        </div>
+        <h3>Wiki + Newsletter</h3>
+        <p>To tackle feature invisibility, I designed a centralized Wiki covering all game features and their documentation. A recurring newsletter drove adoption — bringing developers to actively explore the available tooling.</p>
+        <h3>CLI Design Documentation</h3>
+        <p>I created a comprehensive CLI design guide defining behavioral patterns, voice and tone, and color-coded outputs per command type. This gave developers and designers a <strong>shared language for CLI interaction</strong>, aligned with Apple and Google style guides.</p>
+        <div class="proj-img">
+          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80" alt="CLI design documentation" loading="lazy">
+        </div>
+        <h3>Metrics Definition</h3>
+        <p>Defined the key metrics to track post-launch: CLI installation rate, bug metrics, conversion and retention rates, active users, churn, loading time, and security vulnerabilities.</p>
+      </div>
+    </div>
+
+    <!-- KEY INSIGHT -->
+    <div class="proj-row reveal">
+      <span class="proj-row-label">Key Insight</span>
+      <div class="proj-row-body">
+        <p>There is no one-size-fits-all game creation flow. The CLI had to be <strong>modular and flexible</strong> enough to adapt to different game types — a fundamental shift from the initial assumption of a standardized process.</p>
+      </div>
+    </div>
+
+    <!-- METRICS -->
+    <div class="reveal" style="margin-bottom:3rem;">
+      <div class="proj-metrics">
+        <div class="proj-metric">
+          <div class="proj-metric-num">31</div>
+          <div class="proj-metric-label">Game features mapped</div>
+        </div>
+        <div class="proj-metric">
+          <div class="proj-metric-num">↑</div>
+          <div class="proj-metric-label">Feature awareness across eng. org</div>
+        </div>
+        <div class="proj-metric">
+          <div class="proj-metric-num">1</div>
+          <div class="proj-metric-label">Hackathon — shipped & demoed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTCOME -->
+    <div class="proj-row reveal">
+      <span class="proj-row-label">Outcome</span>
+      <div class="proj-row-body">
+        <ul class="proj-outcomes">
+          <li>CLI shipped and demoed at the internal Hackathon</li>
+          <li>Developer feedback was strongly positive — the tool automated repetitive setup tasks that previously consumed hours</li>
+          <li>Post-launch iteration based on usage data and bug metrics</li>
+          <li>Wiki and newsletter increased feature awareness across the engineering org</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NAV BOTTOM -->
+<div class="proj-nav-bottom">
+  <a href="project-itau.html" class="proj-nav-link">← Product Design at Scale</a>
+  <a href="project-healthcare-saas.html" class="proj-nav-link">Healthcare SaaS →</a>
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 Mariana Rondino · São Paulo, BR</span>
+  <a href="portfolio-mariana-v2.html" class="footer-back">← Back to portfolio</a>
+</footer>
+
+<script>
+if (window.matchMedia('(pointer: fine)').matches) {
+  const cur = document.getElementById('cur'), ring = document.getElementById('cur-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function anim(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim);})();
+  document.querySelectorAll('a').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-grow'));el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-grow'));});
+}
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target);}});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
